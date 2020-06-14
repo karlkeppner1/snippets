@@ -1,0 +1,29 @@
+
+type Dog {
+	Breed: String!
+	CallName: String
+}
+
+type Mutation {
+	AddDog(Dog: NewDog!, Relationships: [NewRelationship]): Dog
+}
+
+input NewDog {
+	Breed: String!
+	CallName: String
+}
+input NewRelationship {
+	FromId: String
+	ToId: String
+	Name: String!
+}
+
+type Query {
+	GetDogById(Id: String!): Dog
+	GetDogsByRelationship(Name: String!, SearchQuery: String!): [Dog]
+}
+
+schema {
+	query: Query
+	mutation: Mutation
+}

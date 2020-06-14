@@ -1,0 +1,22 @@
+mutation AddDog{
+  AddDog(
+    Dog: {
+      Breed: "Lab" 
+      CallName: "Betty"
+    }
+    Relationships: [
+        {
+            ToId: "12345posadfpkjh423"
+            Name: "Sire"
+        },
+        {
+            ToId: "345-908sdkjqw"
+            Name: "Dam"
+        }
+    ]
+  )
+  {
+    Breed
+    CallName
+  }
+}

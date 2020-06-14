@@ -1,0 +1,53 @@
+## Request Mapping
+#set($dog = "Id: '${util.autoId()}'")
+#foreach($key in $ctx.args.keySet())
+    #if($key != "sireId")
+    	#if($key != "damId")
+        	#set($dog = "${dog},${key}:'${ctx.args.get(${key})}'")
+    	#end
+    #end
+#end
+#set($statement = "")
+#if($ctx.args.containsKey("damId"))
+	#if($ctx.args.containsKey("sireId"))
+		#set($statement = "OPTIONAL MATCH (dam:Dog {Id:'${ctx.args.damId}',Sex:'Female'}), (sire:Dog {Id:'${ctx.args.sireId}',Sex:'Male'}) ")
+    #else
+    	#set($statement = "OPTIONAL MATCH (dam:Dog {Id:'${ctx.args.damId}',Sex:'Female'}) ")
+    #end
+#elseif($ctx.args.containsKey("sireId"))
+	#set($statement = "OPTIONAL MATCH (sire:Dog {Id:'${ctx.args.sireId}',Sex:'Male'}) ")
+#end
+#set($statement = "${statement}CREATE (newDog:Dog {${dog}})")
+#if($ctx.args.containsKey("damId"))
+	#if($ctx.args.containsKey("sireId"))
+		#set($statement = "${statement}-[:DAM]->(dam), (newDog)-[:SIRE]->(sire) RETURN newDog")
+    #else
+    	#set($statement = "${statement}-[:DAM]->(dam) RETURN newDog")
+    #end
+#elseif($ctx.args.containsKey("sireId"))
+	#set($statement = "${statement}-[:SIRE]->(sire) RETURN newDog")
+#else
+	#set($statement = "${statement} RETURN newDog")
+#end
+{
+    "version": "2018-05-29",
+    "method": "POST",
+    "resourcePath": "/db/data/transaction/commit",
+    "params": {
+        "body": {
+            "statements": [
+                {
+                    "statement": "${statement}"
+                }
+            ]
+        },
+        "headers": {
+            "Content-Type": "application/json",
+            "Authorization": "bmVvNGo6YVJOTW5VRXlVdXVVNyFRdXFLag=="
+        }
+    }
+}
+
+## Response Mapping
+#set($response = $util.parseJson($ctx.result.body))
+$util.toJson($response.results[0].data[0].row[0])
