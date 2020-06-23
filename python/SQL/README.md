@@ -1,0 +1,1 @@
+These SQL snippets are NOT secure. They were for a prototype and are not ready for production in any way.
