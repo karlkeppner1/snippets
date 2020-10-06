@@ -1,0 +1,1 @@
+ACCOUNT_ID=$(curl http://169.254.169.254/latest/dynamic/instance-identity/document 2> /dev/null | grep accountId | cut -d \" -f 4)

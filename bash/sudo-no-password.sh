@@ -1,0 +1,1 @@
+echo "username    ALL=(ALL) NOPASSWD:ALL" | sudo EDITOR='tee -a' visudo
